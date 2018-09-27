@@ -1,5 +1,5 @@
 ---
-title: "data_wrangling"
+title: "data_manipulation"
 author: "DZ"
 date: "September 18, 2018"
 output: html_document
@@ -7,24 +7,61 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(skimr)
 ```
 
-## R Markdown
+## Import FAS data
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Import my first csv
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+litter_data <- read_csv(file = './data/FAS_litters.csv')
+litter_data <- janitor::clean_names(litter_data)
+pups_data <- read_csv(file='./data/FAS_pups.csv')
+pups_data <- janitor::clean_names(pups_data)
 
-```{r cars}
-summary(cars)
+
 ```
 
-## Including Plots
+## Select Variables
+```{r}
+select(litter_data, litter_number, gd0_weight)
+select(litter_data, litter_number, gd0_weight)
 
-You can also embed plots, for example:
+select(litter_data, group, gd_of_birth:pups_survive)
+select(litter_data, -litter_number)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### rename
+```{r}
+select(litter_data, litter_number, gd0_day_0_weight=gd0_weight)
+rename(litter_data,  gd0_day_0_weight=gd0_weight)
+```
+
+... use select helpers
+```{r}
+select(litter_data, starts_with('gd'))
+select(litter_data, litter_number, starts_with('pup'))
+select(litter_data, litter_number, everything())
+```
+
+head(pups_data)
+
+### exercise
+
+```{r}
+select(pups_data,  litter_number, sex, pd_ears)
+```
+
+
+### Filter
+```{r}
+
+```
+
