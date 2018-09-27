@@ -31,3 +31,82 @@ weather_df
 
 ```
 
+### Start blank plot
+```{r}
+ggplot(data=weather_df, aes(x=tmin, y=tmax))
+```
+
+### Scatterplot
+```{r}
+ggplot(data=weather_df, aes(x=tmin, y=tmax))+
+  geom_point()
+```
+
+### Scatterplot of CentralPark_NY
+```{r}
+weather_df %>% 
+  filter(name=='CentralPark_NY') %>% 
+  ggplot( aes(x=tmin, y=tmax))+
+  geom_point()
+```
+
+### Saving ggplot
+```{r}
+weather_sp <- ggplot(data=weather_df, aes(x=tmin, y=tmax))+
+  geom_point()
+
+```
+
+### More plot options
+```{r}
+ggplot(data=weather_df, aes(x=tmin, y=tmax))+
+  geom_point(aes(color=name))
+```
+
+
+### Add a Geom
+```{r}
+ggplot(data=weather_df, aes(x=tmin, y=tmax))+
+  geom_point(aes(color=name))+
+  geom_smooth(se=F)
+```
+
+### Alpha level
+```{r}
+ggplot(data=weather_df, aes(x=tmin, y=tmax))+
+  geom_point(aes(color=name,alpha=0.4))+
+  geom_smooth(se=F, aes(color=name))
+```
+
+
+### Several panels
+```{r}
+ggplot(data=weather_df, aes(x=tmin, y=tmax))+
+  geom_point(aes(color=name,alpha=0.4))+
+  geom_smooth(se=F, aes(color=name))+
+  facet_grid(~ name)
+```
+
+
+### Several Tmax and year
+```{r}
+ggplot(data=weather_df, aes(x=date, y=tmax))+
+  geom_point(aes(color=name,alpha=0.4))+
+  geom_smooth(se=F, aes(color=name))+
+  facet_grid(~ name)
+
+ggplot(data=weather_df, aes(x=date, y=tmax, color=name))+
+  geom_line()
+
+```
+
+
+### Precip
+```{r}
+ggplot(data=weather_df, aes(x=date, y=tmax,color=name, size=prcp))+
+  geom_point()+
+   geom_smooth(se=F, aes(color=name))+
+  facet_grid(~name)
+
+```
+
