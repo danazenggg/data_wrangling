@@ -9,6 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggridges)
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
 ```
 
 
@@ -107,6 +112,71 @@ ggplot(data=weather_df, aes(x=date, y=tmax,color=name, size=prcp))+
   geom_point()+
    geom_smooth(se=F, aes(color=name))+
   facet_grid(~name)
+```
 
+```{r}
+ggplot(weather_df, aes(x = tmax, y = name)) + 
+  geom_density_ridges(scale = .85)
+```
+
+
+## Oct 2 EDA
+
+```{r}
+library(patchwork)
+weather_df = 
+  rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
+                      var = c("PRCP", "TMIN", "TMAX"), 
+                      date_min = "2017-01-01",
+                      date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY", 
+                      USC00519397 = "Waikiki_HA",
+                      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+weather_df
+```
+
+### Getting a fancier plot
+```{r}
+ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5)+ 
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maxiumum daily temperature (C)",
+    caption = "Data from the rnoaa package"
+  )+
+  scale_x_continuous(breaks = c(-15, 0, 15), 
+                     labels = c("-15ºC", "0", "15"),
+                     limits = c(-20, 30)) + 
+  scale_y_continuous(trans = "sqrt", 
+                     position = "right")+
+  scale_color_hue(name='location',
+                  h= c(100, 150))
+```
+
+### Virdis Package
+```{r}
+ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5)+ 
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maxiumum daily temperature (C)",
+    caption = "Data from the rnoaa package"
+  )+
+  scale_x_continuous(breaks = c(-15, 0, 15), 
+                     labels = c("-15ºC", "0", "15"),
+                     limits = c(-20, 30)) + 
+  scale_y_continuous(trans = "sqrt", 
+                     position = "right")+
+ viridis::scale_color_viridis(
+   name='Location', 
+   discrete=T
+ )+
+  theme(legend.position = 'bottom')
 ```
 
