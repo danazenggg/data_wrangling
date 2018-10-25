@@ -22,6 +22,40 @@ drug_use_xml %>%
   html_nodes(css = "table") %>% 
   .[[1]] %>%
   html_table() %>% 
-  slice(-1)
+  slice(-1) %>% 
+  as.tibble()
+```
+
+Exercise
+```{r}
+url_haha <- 'https://www.bestplaces.net/cost_of_living/city/new_york/new_york'
+
+df_xml <- read_html(url_haha)
+
+df_xml %>% 
+  html_nodes(css='table') %>% 
+  .[[1]] %>% 
+  html_table(header = T)
+
+nyc_cost = read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
+  html_nodes(css = "table") %>%
+  .[[1]] %>%
+  html_table(header = TRUE)
+```
+
+Harry Potter
+```{r}
+harrypotter <- read_html("https://www.imdb.com/list/ls000630791/") %>% 
+  html_nodes(css = '.lister-item-header a') %>% 
+  html_text()
+```
+
+
+## API
+
+Get the water data
+```{r}
+water <- GET('https://data.cityofnewyork.us/resource/waf7-5gvc.json') %>% 
+  content('parse')
 ```
 
